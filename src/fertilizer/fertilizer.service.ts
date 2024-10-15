@@ -6,14 +6,26 @@ import { CreateFertilizerDto } from './dto/create-fertilizer.dto';
 import { Fertilizer, FertilizerDocument } from '../schemas/fertilizer.schema';
 import { UpdateFertilizerDto } from './dto/update-fertilizer.dto';
 
+/**
+ * Service class for managing fertilizers.
+ */
 @Injectable()
 export class FertilizerService {
+  /**
+   * Constructor for the FertilizerService class.
+   * @param fertilizerModel - The model for the Fertilizer schema.
+   * @returns An instance of the FertilizerService class.
+   */
   constructor(
     @InjectModel(Fertilizer.name)
     private readonly fertilizerModel: Model<FertilizerDocument>,
   ) {}
-  // ... existing methods
 
+  /**
+   * Creates a new fertilizer.
+   * @param createFertilizerDto - The data transfer object containing fertilizer details.
+   * @returns The newly created fertilizer.
+   */
   async createFertilizer(
     createFertilizerDto: CreateFertilizerDto,
   ): Promise<Fertilizer> {
@@ -22,10 +34,19 @@ export class FertilizerService {
     return newFertilizer.save();
   }
 
+  /**
+   *  Finds all fertilizers.
+   * @returns An array of all fertilizers.
+   */
   async findAll(): Promise<Fertilizer[]> {
     return this.fertilizerModel.find().exec();
   }
 
+  /**
+   * Finds a fertilizer by ID.
+   * @param id - The ID of the fertilizer.
+   * @returns The fertilizer with the specified ID.
+   */
   async findOne(id: string): Promise<Fertilizer> {
     try {
       const fertilizer = await this.fertilizerModel.findById(id).exec();
@@ -38,6 +59,13 @@ export class FertilizerService {
     }
   }
 
+  /**
+   * Updates a fertilizer.
+   * @param id - The ID of the fertilizer.
+   * @param updateFertilizerDto - The data transfer object containing the updated fertilizer details.
+   * @returns The updated fertilizer.
+   * @throws NotFoundException if the fertilizer is not found.
+   */
   async updateFertilizer(
     id: string,
     updateFertilizerDto: UpdateFertilizerDto,
@@ -55,6 +83,12 @@ export class FertilizerService {
     }
   }
 
+  /**
+   * Deletes a fertilizer.
+   * @param id - The ID of the fertilizer.
+   * @returns The deleted fertilizer.
+   * @throws NotFoundException if the fertilizer is not found.
+   */
   async deleteFertilizer(id: string): Promise<Fertilizer> {
     try {
       const deletedFertilizer = await this.fertilizerModel
@@ -64,28 +98,6 @@ export class FertilizerService {
         throw new NotFoundException(`Fertilizer with ID ${id} not found`);
       }
       return deletedFertilizer;
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-  }
-
-  async calculateComposition(id: string): Promise<Fertilizer> {
-    try {
-      const fertilizer = await this.fertilizerModel.findById(id);
-      if (!fertilizer) {
-        throw new NotFoundException(`Fertilizer with ID ${id} not found`);
-      }
-      const totalConcentration = fertilizer.elements.reduce(
-        (acc, el) => acc + el.concentration,
-        0,
-      );
-      fertilizer.elements.forEach((el) =>
-        fertilizer.content.push({
-          element: el.name,
-          concentration: (el.concentration / totalConcentration) * 100,
-        }),
-      );
-      return fertilizer.save();
     } catch (error) {
       throw new NotFoundException(error.message);
     }

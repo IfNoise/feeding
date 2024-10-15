@@ -13,12 +13,12 @@ import { LoggerMiddleware } from './common/logger.middlewware';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    FertilizerUnitModule,
-    ConcentrateModule,
-    FertilizerModule,
     DevtoolsModule.register({
       http: process.env.NODE_ENV !== 'production',
     }),
+    FertilizerUnitModule,
+    ConcentrateModule,
+    FertilizerModule,
     RecipeModule,
     WaterModule,
   ],

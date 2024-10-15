@@ -1,18 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-
-@Schema()
-export class Element {
-  @Prop({ type: Types.ObjectId, auto: true })
-  _id: Types.ObjectId;
-
-  @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
-  concentration: number;
-}
-export const ElementSchema = SchemaFactory.createForClass(Element);
+import { Document } from 'mongoose';
+import { Element, ElementSchema } from './element.schema';
 
 @Schema()
 export class Fertilizer {
@@ -38,10 +26,20 @@ export class Fertilizer {
         concentration: { type: Number, required: true },
       },
     ],
+    default: [],
   })
-  content: [{ element: string; concentration: number }];
+  content: { element: string; concentration: number }[];
+
+  @Prop({
+    type: Number,
+  })
+  aniones: number;
+
+  @Prop({
+    type: Number,
+  })
+  kationes: number;
 }
 
 export const FertilizerSchema = SchemaFactory.createForClass(Fertilizer);
 export type FertilizerDocument = Fertilizer & Document;
-export type ElementDocument = Element & Document;

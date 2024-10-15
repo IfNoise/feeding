@@ -1,20 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-
-@Schema()
-export class Element {
-  @Prop(Types.ObjectId)
-  _id: Types.ObjectId;
-
-  @Prop({ required: true })
-  element: string;
-
-  @Prop({ required: true })
-  concentration: number;
-}
-
-const ElementSchema = SchemaFactory.createForClass(Element);
-
+import { Document } from 'mongoose';
+import { Element, ElementSchema } from './element.schema';
 @Schema()
 export class Water {
   @Prop({ required: true })
@@ -31,6 +17,15 @@ export class Water {
 
   @Prop({ type: [ElementSchema], default: [] })
   elements: Element[];
+  @Prop({
+    type: [
+      {
+        element: { type: String, required: true },
+        concentration: { type: Number, required: true },
+      },
+    ],
+  })
+  content: { element: string; concentration: number }[];
 }
 export const WaterSchema = SchemaFactory.createForClass(Water);
 export type WaterDocument = Water & Document;

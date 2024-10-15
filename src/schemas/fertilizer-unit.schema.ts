@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { Ion } from './ion.schema';
 
 @Schema()
 export class Pump {
-  @Prop({ type: Types.ObjectId, auto: true })
   _id: Types.ObjectId;
 
   @Prop({ required: true })
@@ -28,12 +28,30 @@ export class Pump {
   factor: number;
 }
 export const PumpSchema = SchemaFactory.createForClass(Pump);
+export type PumpDocument = Pump & Document;
+
+@Schema()
+export class Solution {
+  @Prop({ type: [{ type: Object }], default: [], _id: false })
+  elements: Record<string, any>[];
+
+  @Prop({ type: Object, default: { kationes: [], aniones: [] } })
+  iones: { kationes: Ion[]; aniones: Ion[] };
+
+  @Prop()
+  kationes: number;
+
+  @Prop()
+  aniones: number;
+
+  @Prop()
+  EC: number;
+}
+export const SolutionSchema = SchemaFactory.createForClass(Solution);
+export type SolutionDocument = Solution & Document;
 
 @Schema()
 export class FertilizerUnit {
-  @Prop({ type: Types.ObjectId, auto: true })
-  _id: Types.ObjectId;
-
   @Prop({ required: true })
   name: string;
 
@@ -43,11 +61,14 @@ export class FertilizerUnit {
   @Prop({ type: Types.ObjectId, ref: 'Water' })
   water: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'Recipe' })
+  recipe: Types.ObjectId;
+
   @Prop({ type: [PumpSchema], default: [] })
   pumps: Pump[];
 
-  @Prop({ type: Object, default: {} })
-  solution: Record<string, any>;
+  @Prop({ type: SolutionSchema, default: {}, _id: false })
+  solution: Solution;
 }
 
 export const FertilizerUnitSchema =

@@ -17,7 +17,9 @@ async function bootstrap() {
     .addTag('feeding')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    jsonDocumentUrl: 'swagger/json',
+  });
   app.enableCors();
   app.setGlobalPrefix('api/v1/feeding');
   app.useGlobalPipes(new ValidationPipe({ transform: true }));

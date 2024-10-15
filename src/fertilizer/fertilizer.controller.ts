@@ -13,12 +13,27 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+/**
+ * Controller class for managing fertilizers.
+ */
+@ApiTags('Fertilizers')
 @Controller('fertilizers')
 export class FertilizerController {
-  // existing methods...
+  /**
+   * Constructor for the FertilizerController class.
+   * @param fertilizerService - The service class for managing fertilizers.
+   * @returns An instance of the FertilizerController class.
+   */
   constructor(private readonly fertilizerService: FertilizerService) {}
 
+  /**
+   * Creates a new fertilizer.
+   * @param createFertilizerDto - The data transfer object containing fertilizer details.
+   * @returns The newly created fertilizer.
+   * @throws InternalServerErrorException if the fertilizer is not created.
+   */
   @Post()
   async createFertilizer(@Body() createFertilizerDto: any) {
     try {
@@ -28,6 +43,13 @@ export class FertilizerController {
     }
   }
 
+  /**
+   * Finds all fertilizers.
+   * @returns An array of all fertilizers.
+   * @throws InternalServerErrorException if the fertilizers are not retrieved
+   * successfully.
+   * @throws NotFoundException if no fertilizers are found.
+   */
   @Get()
   async findAll() {
     try {
@@ -37,6 +59,14 @@ export class FertilizerController {
     }
   }
 
+  /**
+   * Finds a single fertilizer by ID.
+   * @param params - The ID of the fertilizer.
+   * @returns The fertilizer
+   * @throws NotFoundException if the fertilizer is not found.
+   * @throws InternalServerErrorException if the fertilizer is not retrieved.
+   * successfully.
+   */
   @Get(':id')
   async findOne(@Param('id') params: IdParamDto) {
     try {
@@ -50,6 +80,13 @@ export class FertilizerController {
     }
   }
 
+  /**
+   * Updates a fertilizer.
+   * @param id  The ID of the fertilizer.
+   * @param updateFertilizerDto The data transfer object containing fertilizer details.
+   * @returns The updated fertilizer.
+   * @throws InternalServerErrorException if the fertilizer is not updated.
+   */
   @Patch(':id')
   async updateFertilizer(
     @Param('id') id: string,
@@ -65,6 +102,12 @@ export class FertilizerController {
     }
   }
 
+  /**
+   * Deletes a fertilizer.
+   * @param id - The ID of the fertilizer.
+   * @returns The deleted fertilizer.
+   * @throws InternalServerErrorException if the fertilizer is not deleted.
+   */
   @Delete(':id')
   async deleteFertilizer(@Param('id') id: string) {
     try {

@@ -1,0 +1,793 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>feeding documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">feeding documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#ConcentrateSchema" title="src/schemas/concentrate.schema.ts" ><b>ConcentrateSchema</b>&nbsp;&nbsp;&nbsp;(src/.../concentrate.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#elementBase" title="src/shared/data/elementBase.ts" ><b>elementBase</b>&nbsp;&nbsp;&nbsp;(src/.../elementBase.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ElementSchema" title="src/schemas/element.schema.ts" ><b>ElementSchema</b>&nbsp;&nbsp;&nbsp;(src/.../element.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FertilizerSchema" title="src/schemas/fertilizer.schema.ts" ><b>FertilizerSchema</b>&nbsp;&nbsp;&nbsp;(src/.../fertilizer.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FertilizerUnitSchema" title="src/schemas/fertilizer-unit.schema.ts" ><b>FertilizerUnitSchema</b>&nbsp;&nbsp;&nbsp;(src/.../fertilizer-unit.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#IonSchema" title="src/schemas/ion.schema.ts" ><b>IonSchema</b>&nbsp;&nbsp;&nbsp;(src/.../ion.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PumpSchema" title="src/schemas/fertilizer-unit.schema.ts" ><b>PumpSchema</b>&nbsp;&nbsp;&nbsp;(src/.../fertilizer-unit.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RecipeSchema" title="src/schemas/recipe.schema.ts" ><b>RecipeSchema</b>&nbsp;&nbsp;&nbsp;(src/.../recipe.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SolutionSchema" title="src/schemas/fertilizer-unit.schema.ts" ><b>SolutionSchema</b>&nbsp;&nbsp;&nbsp;(src/.../fertilizer-unit.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#WaterSchema" title="src/schemas/water.schema.ts" ><b>WaterSchema</b>&nbsp;&nbsp;&nbsp;(src/.../water.schema.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/schemas/concentrate.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ConcentrateSchema"></a>
+                    <span class="name">
+                        <span ><b>ConcentrateSchema</b></span>
+                        <a href="#ConcentrateSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Concentrate)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Concentrate schema.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/data/elementBase.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="elementBase"></a>
+                    <span class="name">
+                        <span ><b>elementBase</b></span>
+                        <a href="#elementBase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    name: &#x27;Nitrogen&#x27;,
+    symbol: &#x27;N&#x27;,
+    mMass: 14,
+    forms: [
+      {
+        name: &#x27;Nitrate&#x27;,
+        symbol: &#x27;NO3&#x27;,
+        ione: {
+          symbol: &#x27;NO3-&#x27;,
+          charge: -1,
+          mMass: 62,
+          сonductivityCoefficient: 71.4, //Удельная проводимость ионов NO3- 71,4 см2/моль
+        },
+        mMass: 14,
+      },
+      {
+        name: &#x27;Ammonium&#x27;,
+        symbol: &#x27;NH4&#x27;,
+        ione: {
+          symbol: &#x27;NH4+&#x27;,
+          charge: 1,
+          mMass: 18,
+          сonductivityCoefficient: 73.4, //Удельная проводимость ионов NH4+ 73,4 см2/моль
+        },
+        mMass: 14,
+      },
+    ],
+  },
+  {
+    name: &#x27;Phosphorus&#x27;,
+    symbol: &#x27;P&#x27;,
+    mMass: 62,
+    forms: [
+      {
+        name: &#x27;Phosphate&#x27;,
+        symbol: &#x27;P2O5&#x27;,
+        ione: {
+          symbol: &#x27;PO4-3&#x27;,
+          charge: -3,
+          mMass: 95,
+          сonductivityCoefficient: 79.0, //Удельная проводимость ионов PO4-3 79,0 см2/моль
+        },
+        mMass: 142,
+      },
+    ],
+  },
+  {
+    name: &#x27;Potassium&#x27;,
+    symbol: &#x27;K&#x27;,
+    mMass: 39,
+    forms: [
+      {
+        name: &#x27;Potassium Oxide&#x27;,
+        symbol: &#x27;K2O&#x27;,
+        ione: {
+          symbol: &#x27;K+&#x27;,
+          charge: 1,
+          mMass: 39,
+          сonductivityCoefficient: 73.4, //Удельная проводимость ионов K+ 73,4 см2/моль
+        },
+        mMass: 94,
+      },
+      {
+        name: &#x27;Potassium&#x27;,
+        symbol: &#x27;K&#x27;,
+        ione: {
+          symbol: &#x27;K+&#x27;,
+          charge: 1,
+          mMass: 39,
+          сonductivityCoefficient: 73.4, //Удельная проводимость ионов K+ 73,4 см2/моль
+        },
+        mMass: 39,
+      },
+    ],
+  },
+  {
+    name: &#x27;Calcium&#x27;,
+    symbol: &#x27;Ca&#x27;,
+    mMass: 40,
+    forms: [
+      {
+        name: &#x27;Calcium Oxide&#x27;,
+        symbol: &#x27;CaO&#x27;,
+        ione: {
+          symbol: &#x27;Ca+2&#x27;,
+          charge: 2,
+          mMass: 40,
+          сonductivityCoefficient: 61.2, //Удельная проводимость ионов Ca+2 61,2 см2/моль
+        },
+        mMass: 56,
+      },
+      {
+        name: &#x27;Calcium Chelate&#x27;,
+        symbol: &#x27;Ca&#x27;,
+        ione: null,
+        charge: 0,
+        mMass: 40,
+      },
+    ],
+  },
+  {
+    name: &#x27;Magnesium&#x27;,
+    symbol: &#x27;Mg&#x27;,
+    mMass: 24,
+    forms: [
+      {
+        name: &#x27;Magnesium Oxide&#x27;,
+        symbol: &#x27;MgO&#x27;,
+        ione: {
+          symbol: &#x27;Mg+2&#x27;,
+          charge: 2,
+          mMass: 24,
+          сonductivityCoefficient: 53.0, //Удельная проводимость ионов Mg+2 53,0 см2/моль
+        },
+        mMass: 40,
+      },
+      {
+        name: &#x27;Magnesium Chelate&#x27;,
+        symbol: &#x27;Mg&#x27;,
+        ione: null,
+        mMass: 24,
+      },
+    ],
+  },
+  {
+    name: &#x27;Sulfur&#x27;,
+    symbol: &#x27;S&#x27;,
+    mMass: 32,
+    forms: [
+      {
+        name: &#x27;Sulfate&#x27;,
+        symbol: &#x27;SO4&#x27;,
+        ione: {
+          symbol: &#x27;SO4-2&#x27;,
+          charge: -2,
+          mMass: 96,
+          сonductivityCoefficient: 79.0, //Удельная проводимость ионов SO4-2 79,0 см2/моль
+        },
+        mMass: 96,
+      },
+    ],
+  },
+  {
+    name: &#x27;Iron&#x27;,
+    symbol: &#x27;Fe&#x27;,
+    mMass: 56,
+    forms: [
+      {
+        name: &#x27;Iron Oxide&#x27;,
+        symbol: &#x27;Fe2O3&#x27;,
+        ione: {
+          symbol: &#x27;Fe+3&#x27;,
+          charge: 3,
+          mMass: 56,
+          сonductivityCoefficient: 61.2, //Удельная проводимость ионов Fe+3 61,2 см2/моль
+        },
+        mMass: 160,
+      },
+      {
+        name: &#x27;Iron Chelate&#x27;,
+        symbol: &#x27;Fe&#x27;,
+        ione: null,
+        charge: 0,
+        mMass: 56,
+      },
+    ],
+  },
+  {
+    name: &#x27;Manganese&#x27;,
+    symbol: &#x27;Mn&#x27;,
+    mMass: 55,
+    forms: [
+      {
+        name: &#x27;Manganese Oxide&#x27;,
+        symbol: &#x27;MnO&#x27;,
+        ione: {
+          symbol: &#x27;Mn+2&#x27;,
+          charge: 2,
+          mMass: 55,
+          сonductivityCoefficient: 53.0, //Удельная проводимость ионов Mn+2 53,0 см2/моль
+        },
+        mMass: 71,
+      },
+      {
+        name: &#x27;Manganese Chelate&#x27;,
+        symbol: &#x27;Mn&#x27;,
+        ione: null,
+        charge: 0,
+        mMass: 55,
+      },
+    ],
+  },
+  {
+    name: &#x27;Zinc&#x27;,
+    symbol: &#x27;Zn&#x27;,
+    mMass: 65,
+    forms: [
+      {
+        name: &#x27;Zinc Oxide&#x27;,
+        symbol: &#x27;ZnO&#x27;,
+        ione: {
+          symbol: &#x27;Zn+2&#x27;,
+          charge: 2,
+          mMass: 65,
+          сonductivityCoefficient: 61.2, //Удельная проводимость ионов Zn+2 61,2 см2/моль
+        },
+        mMass: 81,
+      },
+      {
+        name: &#x27;Zinc Chelate&#x27;,
+        symbol: &#x27;Zn&#x27;,
+        ione: null,
+        charge: 0,
+        mMass: 65,
+      },
+    ],
+  },
+  {
+    name: &#x27;Copper&#x27;,
+    symbol: &#x27;Cu&#x27;,
+    mMass: 63,
+    forms: [
+      {
+        name: &#x27;Copper Oxide&#x27;,
+        symbol: &#x27;CuO&#x27;,
+        ione: {
+          symbol: &#x27;Cu+2&#x27;,
+          charge: 2,
+          mMass: 63,
+          сonductivityCoefficient: 61.2, //Удельная проводимость ионов Cu+2 61,2 см2/моль
+        },
+        mMass: 79,
+      },
+      {
+        name: &#x27;Copper Chelate&#x27;,
+        symbol: &#x27;Cu&#x27;,
+        ione: null,
+        mMass: 63,
+      },
+    ],
+  },
+  {
+    name: &#x27;Boron&#x27;,
+    symbol: &#x27;B&#x27;,
+    mMass: 11,
+    forms: [
+      {
+        name: &#x27;Boric Acid&#x27;,
+        symbol: &#x27;H3BO3&#x27;,
+        ione: null,
+        mMass: 61,
+      },
+      {
+        name: &#x27;Boron&#x27;,
+        symbol: &#x27;B&#x27;,
+        ione: null,
+        mMass: 11,
+      },
+    ],
+  },
+  {
+    name: &#x27;Molybdenum&#x27;,
+    symbol: &#x27;Mo&#x27;,
+    mMass: 96,
+    forms: [
+      {
+        name: &#x27;Molybdenum Chelate&#x27;,
+        symbol: &#x27;Mo&#x27;,
+        ione: null,
+        charge: 6,
+        mMass: 96,
+      },
+    ],
+  },
+  {
+    name: &#x27;Nickel&#x27;,
+    symbol: &#x27;Ni&#x27;,
+    mMass: 59,
+    forms: [
+      {
+        name: &#x27;Nickel&#x27;,
+        symbol: &#x27;Ni&#x27;,
+        ione: &#x27;Ni+2&#x27;,
+        charge: 2,
+        mMass: 59,
+      },
+    ],
+  },
+  {
+    name: &#x27;Cobalt&#x27;,
+    symbol: &#x27;Co&#x27;,
+    mMass: 59,
+    forms: [
+      {
+        name: &#x27;Cobalt&#x27;,
+        symbol: &#x27;Co&#x27;,
+        ione: &#x27;Co+2&#x27;,
+        charge: 2,
+        mMass: 59,
+      },
+    ],
+  },
+  {
+    name: &#x27;Sodium&#x27;,
+    symbol: &#x27;Na&#x27;,
+    mMass: 23,
+    forms: [
+      {
+        name: &#x27;Sodium&#x27;,
+        symbol: &#x27;Na&#x27;,
+        ione: &#x27;Na+&#x27;,
+        charge: 1,
+        mMass: 23,
+      },
+    ],
+  },
+  {
+    name: &#x27;Silicon&#x27;,
+    symbol: &#x27;Si&#x27;,
+    mMass: 28,
+    forms: [
+      {
+        name: &#x27;Silicon&#x27;,
+        symbol: &#x27;Si&#x27;,
+        ione: &#x27;Si+4&#x27;,
+        charge: 4,
+        mMass: 28,
+      },
+    ],
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/element.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ElementSchema"></a>
+                    <span class="name">
+                        <span ><b>ElementSchema</b></span>
+                        <a href="#ElementSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Element)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/fertilizer.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FertilizerSchema"></a>
+                    <span class="name">
+                        <span ><b>FertilizerSchema</b></span>
+                        <a href="#FertilizerSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Fertilizer)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/fertilizer-unit.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FertilizerUnitSchema"></a>
+                    <span class="name">
+                        <span ><b>FertilizerUnitSchema</b></span>
+                        <a href="#FertilizerUnitSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(FertilizerUnit)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PumpSchema"></a>
+                    <span class="name">
+                        <span ><b>PumpSchema</b></span>
+                        <a href="#PumpSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Pump)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SolutionSchema"></a>
+                    <span class="name">
+                        <span ><b>SolutionSchema</b></span>
+                        <a href="#SolutionSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Solution)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/ion.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IonSchema"></a>
+                    <span class="name">
+                        <span ><b>IonSchema</b></span>
+                        <a href="#IonSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Ion)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/recipe.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RecipeSchema"></a>
+                    <span class="name">
+                        <span ><b>RecipeSchema</b></span>
+                        <a href="#RecipeSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Recipe)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schemas/water.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="WaterSchema"></a>
+                    <span class="name">
+                        <span ><b>WaterSchema</b></span>
+                        <a href="#WaterSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SchemaFactory.createForClass(Water)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

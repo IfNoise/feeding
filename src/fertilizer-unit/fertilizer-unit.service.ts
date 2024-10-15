@@ -1,15 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FertilizerUnit } from 'src/schemas/fertilizer-unit.schema';
+import {
+  FertilizerUnit,
+  FertilizerUnitDocument,
+} from 'src/schemas/fertilizer-unit.schema';
 
+/**
+ * Service class for managing fertilizer units.
+ */
 @Injectable()
 export class FertilizerUnitService {
+
+  /**
+   * Constructor for the FertilizerUnitService class.
+   * @param fertilizerUnitModel - The model for the FertilizerUnit schema.
+   * @returns An instance of the FertilizerUnitService class.
+   */
   constructor(
     @InjectModel(FertilizerUnit.name)
-    private readonly fertilizerUnitModel: Model<FertilizerUnit>,
+    private readonly fertilizerUnitModel: Model<FertilizerUnitDocument>,
   ) {}
 
+  /**
+   * Creates a new fertilizer unit.
+   * @param createFertilizerUnitDto - The data transfer object containing fertilizer unit details.
+   * @returns The newly created fertilizer unit.
+   */
   async createFertilizerUnit(
     createFertilizerUnitDto: any,
   ): Promise<FertilizerUnit> {
@@ -19,14 +36,29 @@ export class FertilizerUnitService {
     return createdFertilizerUnit.save();
   }
 
+  /**
+   * Finds all fertilizer units.
+   * @returns An array of all fertilizer units.
+   */
   async findAll(): Promise<FertilizerUnit[]> {
     return this.fertilizerUnitModel.find().exec();
   }
 
+  /**
+   * Finds a fertilizer unit by ID.
+   * @param id - The ID of the fertilizer unit.
+   * @returns The fertilizer unit with the specified ID.
+   */
   async findOne(id: string): Promise<FertilizerUnit> {
-    return this.fertilizerUnitModel.findById(id).exec();
+    return this.fertilizerUnitModel.findById(id);
   }
 
+  /**
+   * Updates a fertilizer unit.
+   * @param id - The ID of the fertilizer unit.
+   * @param updateFertilizerUnitDto - The data transfer object containing the updated fertilizer unit details.
+   * @returns The updated fertilizer unit.
+   */
   async updateFertilizerUnit(
     id: string,
     updateFertilizerUnitDto: any,
@@ -36,41 +68,12 @@ export class FertilizerUnitService {
       .exec();
   }
 
+  /**
+   * Deletes a fertilizer unit.
+   * @param id - The ID of the fertilizer unit.
+   * @returns The deleted fertilizer unit.
+   */
   async deleteFertilizerUnit(id: string): Promise<FertilizerUnit> {
     return this.fertilizerUnitModel.findByIdAndDelete(id).exec();
-  }
-
-  // Функции для манипуляции массивом pumps
-
-  async addPump(id: string, pump: any): Promise<FertilizerUnit> {
-    const fertilizerUnit = await this.fertilizerUnitModel.findById(id);
-    fertilizerUnit.pumps.push(pump);
-    return fertilizerUnit.save();
-  }
-
-  async updatePump(
-    id: string,
-    pumpId: string,
-    pumpData: any,
-  ): Promise<FertilizerUnit> {
-    const fertilizerUnit = await this.fertilizerUnitModel.findById(id);
-    const pumpIndex = fertilizerUnit.pumps.findIndex(
-      (pump) => pump._id.toString() === pumpId,
-    );
-    if (pumpIndex > -1) {
-      fertilizerUnit.pumps[pumpIndex] = {
-        ...fertilizerUnit.pumps[pumpIndex],
-        ...pumpData,
-      };
-    }
-    return fertilizerUnit.save();
-  }
-
-  async removePump(id: string, pumpId: string): Promise<FertilizerUnit> {
-    const fertilizerUnit = await this.fertilizerUnitModel.findById(id);
-    fertilizerUnit.pumps = fertilizerUnit.pumps.filter(
-      (pump) => pump._id.toString() !== pumpId,
-    );
-    return fertilizerUnit.save();
   }
 }

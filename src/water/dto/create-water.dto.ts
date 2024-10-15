@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateElementDto } from './create-element.dto';
+import { Element } from 'src/schemas/element.schema';
 
 export class CreateWaterDto {
   @IsString()
@@ -25,9 +25,4 @@ export class CreateWaterDto {
   @IsNumber()
   @IsNotEmpty()
   EC: number;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateElementDto)
-  elements: CreateElementDto[];
 }
