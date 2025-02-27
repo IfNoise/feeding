@@ -61,7 +61,7 @@ export class FertilizerUnit {
   @Prop({ type: Types.ObjectId, ref: 'Water' })
   water: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Recipe' })
+  @Prop({ type: Types.ObjectId, ref: 'Recipe', autopopulate: true })
   recipe: Types.ObjectId;
 
   @Prop({ type: [PumpSchema], default: [] })

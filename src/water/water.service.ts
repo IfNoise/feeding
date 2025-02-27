@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Water, WaterDocument } from '../schemas/water.schema';
 import { UpdateElementDto } from './dto/update-element.dto';
-import { Element, ElementDocument } from 'src/schemas/element.schema';
+import { Element, ElementDocument } from '../schemas/element.schema';
 import { CreateElementDto } from './dto/create-element.dto';
-import { baseElement } from 'src/shared/types/baseElement';
-import { elementBase } from 'src/shared/data/elementBase';
-import { elementForm } from 'src/shared/types/elementForm';
+import { baseElement } from '../shared/types/baseElement';
+import { elementBase } from '../shared/data/elementBase';
+import { elementForm } from '../shared/types/elementForm';
 
 @Injectable()
 export class WaterService {

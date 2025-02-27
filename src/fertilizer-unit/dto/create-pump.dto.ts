@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { Types } from 'mongoose';
 
 /**
  * Data transfer object for creating a pump.
@@ -32,12 +33,12 @@ export class CreatePumpDto {
 
   /**
    * The minimum flow rate of the pump.
-   * @example 10
+   * @example 0.4
    */
   @ApiProperty({
     description: 'The minimum flow rate of the pump.',
     type: Number,
-    example: 10,
+    example: 0.4,
   })
   @IsNumber()
   @IsNotEmpty()
@@ -50,7 +51,7 @@ export class CreatePumpDto {
   @ApiProperty({
     description: 'The maximum flow rate of the pump.',
     type: Number,
-    example: 100,
+    example: 4,
   })
   @IsNumber()
   @IsNotEmpty()
@@ -62,12 +63,12 @@ export class CreatePumpDto {
    */
   @ApiProperty({
     description: 'The concentrate of the pump.',
-    type: String,
+    type: Types.ObjectId,
     example: 'Concentrate 1',
   })
   @IsString()
   @IsNotEmpty()
-  concentrate: string;
+  concentrate: Types.ObjectId;
 
   /**
    * The flow rate of the pump.

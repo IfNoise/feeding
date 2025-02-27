@@ -33,6 +33,7 @@ export class RecipeController {
    * @throws BadRequestException if the recipe is not found.
    */
   @Post()
+  
   async createRecipe(@Body() createRecipeDto: CreateRecipeDto) {
     try {
       return await this.recipeService.createRecipe(createRecipeDto);

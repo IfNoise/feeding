@@ -4,14 +4,13 @@ import { Model } from 'mongoose';
 import {
   FertilizerUnit,
   FertilizerUnitDocument,
-} from 'src/schemas/fertilizer-unit.schema';
+} from '../schemas/fertilizer-unit.schema';
 
 /**
  * Service class for managing fertilizer units.
  */
 @Injectable()
 export class FertilizerUnitService {
-
   /**
    * Constructor for the FertilizerUnitService class.
    * @param fertilizerUnitModel - The model for the FertilizerUnit schema.

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { WaterService } from './water.service';
 import { UpdateWaterDto } from './dto/update-water.dto';
-import { IdParamDto } from 'src/shared/dto/idparam.dto';
+import { IdParamDto } from '../shared/dto/idparam.dto';
 import { UpdateElementDto } from './dto/update-element.dto';
 import { ApiTags } from '@nestjs/swagger';
 

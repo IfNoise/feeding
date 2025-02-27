@@ -57,8 +57,14 @@ export class Concentrate {
   })
   @Prop([
     {
-      fertilizer: { type: Types.ObjectId },
-      concentration: { type: Number, required: true },
+      fertilizer: {
+        type: Types.ObjectId,
+        ref: 'Fertilizer',
+        autopopulate: {
+          select: ['name', 'description', '_id'],
+        },
+      },
+      concentration: { type: Number },
     },
   ])
   fertilizers: Array<{ fertilizer: Types.ObjectId; concentration: number }>;

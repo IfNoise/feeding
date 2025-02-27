@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Recipe } from 'src/schemas/recipe.schema';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
+import { Recipe, RecipeDocument } from '../schemas/recipe.schema';
 
 /**
  * Service class for managing recipes.
@@ -16,7 +16,8 @@ export class RecipeService {
    * @returns An instance of the RecipeService class.
    */
   constructor(
-    @InjectModel(Recipe.name) private readonly recipeModel: Model<Recipe>,
+    @InjectModel(Recipe.name)
+    private readonly recipeModel: Model<RecipeDocument>,
   ) {}
 
   /**

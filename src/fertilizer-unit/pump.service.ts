@@ -194,8 +194,6 @@ export class PumpService {
   async calculateComposition(
     fertilizerUnit: FertilizerUnitDocument,
   ): Promise<FertilizerUnitDocument> {
-    let kationes = 0;
-    let aniones = 0;
     const elements = await Promise.all(
       fertilizerUnit.pumps.map(async (pump: Pump) => {
         const concentrate: ConcentrateDocument = await this.concentrateModel
@@ -204,8 +202,6 @@ export class PumpService {
         if (!concentrate) {
           throw new NotFoundException('Concentrate not found');
         }
-        kationes += concentrate.kationes * pump.flowRate * pump.factor * 10;
-        aniones += concentrate.aniones * pump.flowRate * pump.factor;
         return concentrate.content.map((element) => {
           return {
             element: element.element,
@@ -225,9 +221,6 @@ export class PumpService {
       }
       return acc;
     }, []);
-
-    fertilizerUnit.solution.kationes = kationes;
-    fertilizerUnit.solution.aniones = aniones;
 
     fertilizerUnit.solution.elements = elements;
     return fertilizerUnit.save();

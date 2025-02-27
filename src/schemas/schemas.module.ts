@@ -17,14 +17,32 @@ import { Ion, IonSchema } from './ion.schema';
   imports: [
     MongooseModule.forRoot('mongodb://ddweed.org/SurinAgro'),
     MongooseModule.forFeature([
-      { name: FertilizerUnit.name, schema: FertilizerUnitSchema },
       { name: Pump.name, schema: PumpSchema },
       { name: Water.name, schema: WaterSchema },
       { name: Recipe.name, schema: RecipeSchema },
       { name: Fertilizer.name, schema: FertilizerSchema },
       { name: Element.name, schema: ElementSchema },
-      { name: Concentrate.name, schema: ConcentrateSchema },
       { name: Ion.name, schema: IonSchema },
+    ]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: Concentrate.name,
+        useFactory: () => {
+          const schema = ConcentrateSchema;
+          schema.plugin(require('mongoose-autopopulate'));
+          return schema;
+        },
+      },
+    ]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: FertilizerUnit.name,
+        useFactory: () => {
+          const schema = FertilizerUnitSchema;
+          schema.plugin(require('mongoose-autopopulate'));
+          return schema;
+        },
+      },
     ]),
   ],
   providers: [

@@ -3,7 +3,10 @@ import { CreateConcentrateDto } from './dto/create-concentrate.dto';
 import { UpdateConcentrateDto } from './dto/update-concentrate.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Concentrate } from 'src/schemas/concentrate.schema';
+import {
+  Concentrate,
+  ConcentrateDocument,
+} from '../schemas/concentrate.schema';
 
 /**
  * Concentrate service class
@@ -16,7 +19,7 @@ export class ConcentrateService {
    */
   constructor(
     @InjectModel(Concentrate.name)
-    private readonly concentrateModel: Model<Concentrate>,
+    private readonly concentrateModel: Model<ConcentrateDocument>,
   ) {}
 
   /**
@@ -38,7 +41,7 @@ export class ConcentrateService {
    * @throws Error if there is an error during retrieval.
    */
   findAll(): Promise<Concentrate[]> {
-    return this.concentrateModel.find();
+    return this.concentrateModel.find().exec();
   }
 
   /**
@@ -48,7 +51,7 @@ export class ConcentrateService {
    * @throws Error if there is an error during retrieval.
    */
   findOne(id: string): Promise<Concentrate> {
-    return this.concentrateModel.findById(id);
+    return this.concentrateModel.findById(id).exec();
   }
 
   /**

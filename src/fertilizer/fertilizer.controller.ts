@@ -8,7 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { FertilizerService } from './fertilizer.service';
-import { IdParamDto } from 'src/shared/dto/idparam.dto';
+import { IdParamDto } from '../shared/dto/idparam.dto';
 import {
   NotFoundException,
   InternalServerErrorException,
