@@ -29,10 +29,14 @@ export class FertilizerUnitService {
   async createFertilizerUnit(
     createFertilizerUnitDto: any,
   ): Promise<FertilizerUnit> {
-    const createdFertilizerUnit = new this.fertilizerUnitModel(
-      createFertilizerUnitDto,
-    );
-    return createdFertilizerUnit.save();
+    try {
+      const createdFertilizerUnit = new this.fertilizerUnitModel(
+        createFertilizerUnitDto,
+      );
+      return await createdFertilizerUnit.save();
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   /**
@@ -49,7 +53,7 @@ export class FertilizerUnitService {
    * @returns The fertilizer unit with the specified ID.
    */
   async findOne(id: string): Promise<FertilizerUnit> {
-    return this.fertilizerUnitModel.findById(id);
+    return this.fertilizerUnitModel.findById(id).exec();
   }
 
   /**

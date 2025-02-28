@@ -11,21 +11,26 @@ const mockFertilizerUnit = {
 };
 
 const mockFertilizerUnitModel = {
-  new: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  constructor: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  create: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  find: jest.fn().mockReturnValue({
+  new: jest.fn().mockImplementation(() => mockFertilizerUnit),
+  constructor: jest.fn().mockImplementation(() => mockFertilizerUnit),
+  create: jest.fn().mockImplementation((dto) => {
+    return Promise.resolve({ ...mockFertilizerUnit, ...dto });
+  }),
+  find: jest.fn().mockImplementation(() => ({
     exec: jest.fn().mockResolvedValue([mockFertilizerUnit]),
-  }),
-  findById: jest.fn().mockReturnValue({
+  })),
+  findOne: jest.fn().mockImplementation(() => ({
     exec: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  }),
-  findByIdAndUpdate: jest.fn().mockReturnValue({
+  })),
+  findOne: jest.fn().mockImplementation(() => ({
     exec: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  }),
-  findByIdAndDelete: jest.fn().mockReturnValue({
+  })),
+  findByIdAndUpdate: jest.fn().mockImplementation(() => ({
     exec: jest.fn().mockResolvedValue(mockFertilizerUnit),
-  }),
+  })),
+  findByIdAndDelete: jest.fn().mockImplementation(() => ({
+    exec: jest.fn().mockResolvedValue(mockFertilizerUnit),
+  })),
 };
 
 describe('FertilizerUnitService', () => {
@@ -81,5 +86,32 @@ describe('FertilizerUnitService', () => {
   it('should delete a fertilizer unit', async () => {
     const result = await service.deleteFertilizerUnit('someId');
     expect(result).toEqual(mockFertilizerUnit);
+  });
+
+  it('should create a new instance of FertilizerUnitService', () => {
+    expect(service instanceof FertilizerUnitService).toBeTruthy();
+  });
+
+  it('should have the model defined', () => {
+    expect(model).toBeDefined();
+  });
+
+  it('should validate mock model methods exist', () => {
+    expect(mockFertilizerUnitModel.find).toBeDefined();
+    expect(mockFertilizerUnitModel.findById).toBeDefined();
+    expect(mockFertilizerUnitModel.findByIdAndUpdate).toBeDefined();
+    expect(mockFertilizerUnitModel.findByIdAndDelete).toBeDefined();
+  });
+
+  it('should handle errors when creating fertilizer unit', async () => {
+    jest.spyOn(model, 'create').mockRejectedValueOnce(new Error('Test error'));
+    await expect(service.createFertilizerUnit({})).rejects.toThrow(
+      'Test error',
+    );
+  });
+
+  it('should handle errors when finding fertilizer units', async () => {
+    jest.spyOn(model, 'find').mockRejectedValueOnce(new Error('Test error'));
+    await expect(service.findAll()).rejects.toThrow('Test error');
   });
 });
