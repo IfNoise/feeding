@@ -7,7 +7,7 @@ BACKUP_DIR="/tmp/mongodb/backups"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 
 # Команда для резервного копирования
-mongodump --uri="mongodb://ddweed.org:27017/SurinAgro" --gzip --out="$BACKUP_DIR/$DATE"
+mongodump --uri="$MONGO_URI/$MONGO_DB" --gzip --out="$BACKUP_DIR/$DATE"
 
 # Проверка успешности выполнения команды
 if [ $? -eq 0 ]; then
