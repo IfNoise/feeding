@@ -17,17 +17,28 @@ describe('ConcentrateService', () => {
     description: 'Test Description',
   };
   const mockConcentrateModel = {
-    new: jest.fn().mockResolvedValue(mockConcentrate),
     constructor: jest.fn().mockResolvedValue(mockConcentrate),
-    find: jest.fn().mockResolvedValue([mockConcentrate]),
-    findById: jest.fn().mockResolvedValue(mockConcentrate),
+    find: jest.fn().mockReturnThis(),
+    exec: jest.fn().mockResolvedValue([mockConcentrate]),
+    findById: jest.fn().mockImplementation(() => {
+      return {
+        exec: jest.fn().mockResolvedValue(mockConcentrate),
+      };
+    }),
     findByIdAndUpdate: jest.fn().mockResolvedValue(mockConcentrate),
     findByIdAndDelete: jest.fn().mockResolvedValue(mockConcentrate),
-    save: jest.fn().mockResolvedValue(mockConcentrate),
+    create: jest.fn().mockResolvedValue(mockConcentrate),
+    prototype: {
+      save: jest.fn().mockResolvedValue(mockConcentrate),
+    },
   };
 
   const mockFertilizerModel = {
     find: jest.fn().mockResolvedValue([]),
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConcentrateService,
         {
@@ -39,30 +50,21 @@ describe('ConcentrateService', () => {
           useValue: mockFertilizerModel,
         },
       ],
-        ConcentrateService,
-        {
-          provide: getModelToken(Concentrate.name),
-          useValue: mockConcentrateModel,
-        },
-      ],
     }).compile();
 
     service = module.get<ConcentrateService>(ConcentrateService);
-    model = module.get<Model<Concentrate>>(getModelToken(Concentrate.name));
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
-  it('should create a new concentrate', async () => {
-    const createConcentrateDto: CreateConcentrateDto = {
-      name: 'Test Concentrate',
-      description: 'Test Description',
-      fertilizers: [
-        { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
-      ],
-    };
+    it('should create a new concentrate', async () => {
+      const createConcentrateDto: CreateConcentrateDto = {
+        name: 'Test Concentrate',
+        description: 'Test Description',
+        fertilizers: [
+          { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
+        ],
+      };
+      const result = await service.create(createConcentrateDto);
+      expect(result).toEqual(mockConcentrate);
+      expect(mockConcentrateModel.create).toHaveBeenCalled();
+    });
     const result = await service.create(createConcentrateDto);
     expect(result).toEqual(mockConcentrate);
     expect(mockConcentrateModel.save).toHaveBeenCalled();
