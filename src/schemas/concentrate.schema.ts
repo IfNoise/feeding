@@ -123,6 +123,9 @@ export class Concentrate {
     type: Number,
   })
   kationes: number;
+
+  @Prop({ type: Object, default: {} })
+  solution: any;
 }
 
 /**

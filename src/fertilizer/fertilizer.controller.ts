@@ -2,118 +2,119 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
-  Param,
   Body,
   Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { FertilizerService } from './fertilizer.service';
-import { IdParamDto } from '../shared/dto/idparam.dto';
+import { CreateFertilizerDto } from './dto/create-fertilizer.dto';
+import { UpdateFertilizerDto } from './dto/update-fertilizer.dto';
 import {
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
+import { Fertilizer, FertilizerDocument } from '../schemas/fertilizer.schema';
 
-/**
- * Controller class for managing fertilizers.
- */
-@ApiTags('Fertilizers')
+@ApiTags('fertilizers')
 @Controller('fertilizers')
 export class FertilizerController {
-  /**
-   * Constructor for the FertilizerController class.
-   * @param fertilizerService - The service class for managing fertilizers.
-   * @returns An instance of the FertilizerController class.
-   */
   constructor(private readonly fertilizerService: FertilizerService) {}
 
-  /**
-   * Creates a new fertilizer.
-   * @param createFertilizerDto - The data transfer object containing fertilizer details.
-   * @returns The newly created fertilizer.
-   * @throws InternalServerErrorException if the fertilizer is not created.
-   */
+  @ApiOperation({ summary: 'Создать новое удобрение' })
+  @ApiBody({ type: CreateFertilizerDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Удобрение успешно создано',
+    type: Fertilizer,
+  })
   @Post()
-  async createFertilizer(@Body() createFertilizerDto: any) {
-    try {
-      return await this.fertilizerService.createFertilizer(createFertilizerDto);
-    } catch {
-      throw new InternalServerErrorException('Failed to create fertilizer');
-    }
+  create(@Body() createFertilizerDto: CreateFertilizerDto) {
+    return this.fertilizerService.createFertilizer(createFertilizerDto);
   }
 
-  /**
-   * Finds all fertilizers.
-   * @returns An array of all fertilizers.
-   * @throws InternalServerErrorException if the fertilizers are not retrieved
-   * successfully.
-   * @throws NotFoundException if no fertilizers are found.
-   */
+  @ApiOperation({ summary: 'Получить все удобрения' })
+  @ApiResponse({
+    status: 200,
+    description: 'Возвращает все удобрения',
+    type: [Fertilizer],
+  })
   @Get()
-  async findAll() {
-    try {
-      return await this.fertilizerService.findAll();
-    } catch {
-      throw new InternalServerErrorException('Failed to retrieve fertilizers');
-    }
+  findAll() {
+    return this.fertilizerService.findAll();
   }
 
-  /**
-   * Finds a single fertilizer by ID.
-   * @param params - The ID of the fertilizer.
-   * @returns The fertilizer
-   * @throws NotFoundException if the fertilizer is not found.
-   * @throws InternalServerErrorException if the fertilizer is not retrieved.
-   * successfully.
-   */
+  @ApiOperation({ summary: 'Получить удобрение по ID' })
+  @ApiParam({ name: 'id', description: 'ID удобрения' })
+  @ApiResponse({
+    status: 200,
+    description: 'Возвращает удобрение',
+    type: Fertilizer,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Удобрение не найдено',
+  })
   @Get(':id')
-  async findOne(@Param('id') params: IdParamDto) {
-    try {
-      const fertilizer = await this.fertilizerService.findOne(params.id);
-      if (!fertilizer) {
-        throw new NotFoundException('Fertilizer not found');
-      }
-      return fertilizer;
-    } catch {
-      throw new InternalServerErrorException('Failed to retrieve fertilizer');
-    }
+  findOne(@Param('id') id: string) {
+    return this.fertilizerService.findOne(id);
   }
 
-  /**
-   * Updates a fertilizer.
-   * @param id  The ID of the fertilizer.
-   * @param updateFertilizerDto The data transfer object containing fertilizer details.
-   * @returns The updated fertilizer.
-   * @throws InternalServerErrorException if the fertilizer is not updated.
-   */
+  @ApiOperation({ summary: 'Обновить удобрение по ID' })
+  @ApiParam({ name: 'id', description: 'ID удобрения' })
+  @ApiBody({ type: UpdateFertilizerDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Удобрение успешно обновлено',
+    type: Fertilizer,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Удобрение не найдено',
+  })
   @Patch(':id')
-  async updateFertilizer(
+  update(
     @Param('id') id: string,
-    @Body() updateFertilizerDto: any,
+    @Body() updateFertilizerDto: UpdateFertilizerDto,
   ) {
-    try {
-      return await this.fertilizerService.updateFertilizer(
-        id,
-        updateFertilizerDto,
-      );
-    } catch {
-      throw new InternalServerErrorException('Failed to update fertilizer');
-    }
+    return this.fertilizerService.updateFertilizer(id, updateFertilizerDto);
   }
 
-  /**
-   * Deletes a fertilizer.
-   * @param id - The ID of the fertilizer.
-   * @returns The deleted fertilizer.
-   * @throws InternalServerErrorException if the fertilizer is not deleted.
-   */
+  @ApiOperation({ summary: 'Удалить удобрение по ID' })
+  @ApiParam({ name: 'id', description: 'ID удобрения' })
+  @ApiResponse({
+    status: 200,
+    description: 'Удобрение успешно удалено',
+    type: Fertilizer,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Удобрение не найдено',
+  })
   @Delete(':id')
-  async deleteFertilizer(@Param('id') id: string) {
-    try {
-      return await this.fertilizerService.deleteFertilizer(id);
-    } catch {
-      throw new InternalServerErrorException('Failed to delete fertilizer');
-    }
+  remove(@Param('id') id: string) {
+    return this.fertilizerService.deleteFertilizer(id);
+  }
+
+  @ApiOperation({ summary: 'Рассчитать раствор для удобрения' })
+  @ApiParam({ name: 'id', description: 'ID удобрения' })
+  @ApiResponse({
+    status: 200,
+    description: 'Раствор успешно рассчитан',
+    type: Fertilizer,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Удобрение не найдено',
+  })
+  @Post(':id/calculate-solution')
+  async calculateSolution(@Param('id') id: string) {
+    const fertilizer = (await this.fertilizerService.findOne(
+      id,
+    )) as FertilizerDocument;
+    return this.fertilizerService.calculateSolution(fertilizer);
   }
 }

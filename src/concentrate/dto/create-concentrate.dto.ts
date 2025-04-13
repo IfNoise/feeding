@@ -1,29 +1,55 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsString,
+  IsArray,
+  IsOptional,
+  ValidateNested,
+  IsNumber,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-/**
- * Data transfer object for creating a concentrate.
- */
-export class CreateConcentrateDto {
-  /**
-   * The name of the concentrate.
-   * @type {string}
-   */
+class FertilizerConcentration {
   @ApiProperty({
-    description: 'The name of the concentrate.',
-    type: String,
-    example: 'Calcium Nitrate',
+    description: 'ID удобрения',
+    example: '60f790f3b311f83d1f4f3f3d',
   })
+  @IsString()
+  fertilizer: string;
+
+  @ApiProperty({
+    description: 'Концентрация удобрения в процентах',
+    example: 100,
+  })
+  @IsNumber()
+  concentration: number;
+}
+
+export class CreateConcentrateDto {
+  @ApiProperty({
+    description: 'Название концентрата',
+    example: 'Раствор А',
+  })
+  @IsString()
   name: string;
 
-  /**
-   * The description of the concentrate.
-   * @type {string}
-   * @example 'A concentrate containing calcium nitrate.'
-   */
-  @ApiProperty({
-    description: 'The descriptio of ',
-    type: String,
-    example: 'A concentrate containing calcium nitrate.',
+  @ApiPropertyOptional({
+    description: 'Описание концентрата',
+    example: 'Содержит макроэлементы',
   })
-  description: string;
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({
+    description: 'Удобрения в концентрате с их концентрациями',
+    type: [FertilizerConcentration],
+    example: [
+      { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
+      { fertilizer: '60f790f3b311f83d1f4f3f3e', concentration: 50 },
+    ],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FertilizerConcentration)
+  fertilizers: FertilizerConcentration[];
 }

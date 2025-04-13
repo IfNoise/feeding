@@ -27,8 +27,7 @@ export class Element {
    * @example 'Nitrogen'
    */
   @ApiProperty({
-    description: 'The name of the element.',
-    type: String,
+    description: 'Название элемента',
     example: 'Nitrogen',
   })
   @Prop({ required: true })
@@ -40,8 +39,7 @@ export class Element {
    * @required
    */
   @ApiProperty({
-    description: 'Concentration of the element in the fertilizer in percent',
-    type: Number,
+    description: 'Концентрация элемента в процентах',
     example: 10,
   })
   @Prop({ required: true })
@@ -54,8 +52,7 @@ export class Element {
    * @example 'NO3'
    */
   @ApiProperty({
-    description: 'Form of the element',
-    type: String,
+    description: 'Форма элемента (химическое соединение)',
     example: 'NO3',
   })
   @Prop({ required: true })

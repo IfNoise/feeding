@@ -4,10 +4,12 @@ import { Model } from 'mongoose';
 import { UpdateElementDto } from './dto/update-element.dto';
 import { Element, ElementDocument } from 'src/schemas/element.schema';
 import { Fertilizer, FertilizerDocument } from 'src/schemas/fertilizer.schema';
-import { elementBase } from 'src/shared/data/elementBase';
 import { elementForm } from '../shared/types/elementForm';
 import { baseElement } from '../shared/types/baseElement';
-import { baseIon } from 'src/shared/types/baseIon';
+import {
+  calculateElementConcentration,
+  IonConductivity,
+} from '../shared/utils/element-calculations';
 
 /**
  * Service class for managing elements in a fertilizer.
@@ -18,10 +20,11 @@ export class ElementService {
    * Logger instance.
    */
   private readonly logger = new Logger(ElementService.name);
+
   /**
-   *
-   * @param fertilizerModel
-   * @param elementModel
+   * Constructor for ElementService
+   * @param fertilizerModel - Model for Fertilizer data
+   * @param elementModel - Model for Element data
    */
   constructor(
     @InjectModel(Fertilizer.name)
@@ -51,15 +54,19 @@ export class ElementService {
     const newElement = await this.elementModel.create(createElementDto);
     fertilizer.elements.push(newElement);
     await fertilizer.save();
+
+    // Автоматически пересчитываем состав удобрения после добавления элемента
     await this.calculateComposition(fertilizer);
+
     return newElement;
   }
 
   /**
-   * Finds all elements in a fertilizer.
+   * Finds an element in a fertilizer.
    * @param fertilizerId - The ID of the fertilizer.
-   * @returns The elements in the fertilizer.
-   * @throws NotFoundException if the fertilizer is not found.
+   * @param elementId - The ID of the element.
+   * @returns The element with the specified ID.
+   * @throws NotFoundException if the fertilizer or element is not found.
    */
   async findOne(fertilizerId: string, elementId: string): Promise<Element> {
     const fertilizer = await this.fertilizerModel.findById(fertilizerId);
@@ -91,7 +98,7 @@ export class ElementService {
     fertilizerId: string,
     elementId: string,
     updateElementDto: UpdateElementDto,
-  ): Promise<Element> {
+  ): Promise<Fertilizer> {
     try {
       const fertilizer = await this.fertilizerModel.findOne({
         _id: fertilizerId,
@@ -101,6 +108,7 @@ export class ElementService {
           `Element with ID ${elementId} not found in fertilizer with ID ${fertilizerId}`,
         );
       }
+
       const element: Element = fertilizer.elements.find(
         (e) => e._id.toString() == elementId,
       );
@@ -109,13 +117,19 @@ export class ElementService {
           `Element with ID ${elementId} not found in fertilizer with ID ${fertilizerId}`,
         );
       }
-      element.concentration = updateElementDto.concentration;
+
+      if (updateElementDto.name) element.name = updateElementDto.name;
+      if (updateElementDto.form) element.form = updateElementDto.form;
+      if (updateElementDto.concentration !== undefined)
+        element.concentration = updateElementDto.concentration;
+
       await fertilizer.save();
-      await this.calculateComposition(fertilizer);
-      this.logger.debug(element);
-      return element;
+
+      // Автоматически пересчитываем состав удобрения после обновления элемента
+
+      return await this.calculateComposition(fertilizer);
     } catch (e) {
-      new NotFoundException(
+      throw new NotFoundException(
         { message: e.message },
         `Element with ID ${elementId} not found`,
       );
@@ -129,8 +143,7 @@ export class ElementService {
    * @returns The removed element.
    * @throws NotFoundException if the fertilizer or element is not found.
    */
-
-  async remove(fertilizerId: string, elementId: string): Promise<Element> {
+  async remove(fertilizerId: string, elementId: string): Promise<Fertilizer> {
     const fertilizer = await this.fertilizerModel.findById(fertilizerId);
     if (!fertilizer) {
       throw new NotFoundException(
@@ -144,9 +157,15 @@ export class ElementService {
     if (!element) {
       throw new NotFoundException(`Element with ID ${elementId} not found`);
     }
+
+    fertilizer.elements = fertilizer.elements.filter(
+      (e) => e._id.toString() !== elementId,
+    );
+
     await fertilizer.save();
-    await this.calculateComposition(fertilizer);
-    return element;
+
+    // Автоматически пересчитываем состав удобрения после удаления элемента
+    return await this.calculateComposition(fertilizer);
   }
 
   /**
@@ -155,21 +174,30 @@ export class ElementService {
    * @returns The updated fertilizer.
    * @throws NotFoundException if there is an error during the calculation.
    */
-  async calculateComposition(
-    fertilizer: FertilizerDocument,
-  ): Promise<Fertilizer> {
+  async calculateComposition(fertilizer: FertilizerDocument) {
     try {
-      const content: { element: string; concentration: number }[] = [];
-      let kationes: number = 0;
-      let aniones: number = 0;
-      fertilizer.elements.map(async (element: Element) => {
-        const baseElement: baseElement = elementBase.find(
+      this.logger.debug('Calculating composition');
+      const elements = await this.elementModel.find({
+        _id: { $in: fertilizer.elements },
+      });
+      this.logger.debug(`Elements: ${JSON.stringify(elements)}`);
+      const elementBase = await import('../shared/data/elementBase').then(
+        (module) => module.elementBase,
+      );
+
+      let kationes = 0;
+      let aniones = 0;
+      const content = [];
+      const ions: IonConductivity[] = [];
+
+      elements.forEach((element) => {
+        const baseElement = elementBase.find(
           (el: baseElement) => el.name === element.name,
         );
-        const baseForm: elementForm = baseElement.forms.find(
+        const baseForm = baseElement.forms.find(
           (el: elementForm) => el.symbol === element.form,
         );
-        const baseIone: baseIon = baseForm.ione;
+
         if (!baseElement) {
           throw new NotFoundException(
             `Base element for ${element.name} not found`,
@@ -181,33 +209,44 @@ export class ElementService {
           );
         }
 
-        const elementConcentration: number =
-          element.concentration * 10 * (baseElement.mMass / baseForm.mMass);
+        // Используем общую функцию для расчета концентрации
+        this.logger.debug(
+          `Calculating concentration for element: ${element.name}, form: ${element.form}, concentration: ${element.concentration}`,
+        );
+        const result = calculateElementConcentration(
+          baseElement,
+          baseForm,
+          element.concentration,
+        );
+        this.logger.debug(`Result: ${JSON.stringify(result)}`);
+        // Добавляем в список содержимого
         content.push({
-          element: baseElement.symbol,
-          concentration: elementConcentration,
+          element: result.element,
+          concentration: result.concentration,
         });
-        if (baseIone) {
-          const ionesConcentration: number = Math.abs(
-            elementConcentration * baseIone.charge,
-          );
 
-          if (baseIone.charge > 0) {
-            kationes += ionesConcentration;
+        // Добавляем информацию об ионах для расчета баланса
+        if (baseForm.ione) {
+          if (baseForm.ione.charge > 0) {
+            kationes += result.equivalentConcentration;
           } else {
-            aniones += ionesConcentration;
+            aniones += result.equivalentConcentration;
           }
         }
       });
 
-      this.logger.debug(`Kationes: ${kationes}`);
-      this.logger.debug(`Aniones: ${aniones}`);
+      // Обновляем поля удобрения
       fertilizer.kationes = kationes;
       fertilizer.aniones = aniones;
       fertilizer.content = content;
+
+      // Сохраняем изменения в базе данных
+      this.logger.debug(
+        `Обновлен состав удобрения: ${JSON.stringify(content, null, 2)} элементов`,
+      );
       return fertilizer.save();
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(`Ошибка при расчете состава: ${error.message}`);
       throw new NotFoundException(error.message);
     }
   }

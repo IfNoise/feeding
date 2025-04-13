@@ -1,14 +1,13 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConcentrateService } from './concentrate.service';
 import { ConcentrateController } from './concentrate.controller';
 import { SchemasModule } from 'src/schemas/schemas.module';
-import { FertilizerController } from './fertilizer.controller';
-import { FertilizerService } from './fertilizer.service';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
-  imports: [SchemasModule],
-  controllers: [ConcentrateController, FertilizerController],
-  providers: [ConcentrateService, FertilizerService, Logger],
-  exports: [ConcentrateService, FertilizerService, Logger],
+  imports: [SchemasModule, SharedModule],
+  controllers: [ConcentrateController],
+  providers: [ConcentrateService],
+  exports: [ConcentrateService],
 })
 export class ConcentrateModule {}

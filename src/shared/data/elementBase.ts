@@ -11,7 +11,8 @@ export const elementBase: any = [
           symbol: 'NO3-',
           charge: -1,
           mMass: 62,
-          сonductivityCoefficient: 71.4, //Удельная проводимость ионов NO3- 71,4 см2/моль
+          сonductivityCoefficient: 71.4, // Удельная проводимость
+          atomCount: 1,
         },
         mMass: 14,
       },
@@ -22,7 +23,8 @@ export const elementBase: any = [
           symbol: 'NH4+',
           charge: 1,
           mMass: 18,
-          сonductivityCoefficient: 73.4, //Удельная проводимость ионов NH4+ 73,4 см2/моль
+          сonductivityCoefficient: 73.4,
+          atomCount: 1,
         },
         mMass: 14,
       },
@@ -41,6 +43,7 @@ export const elementBase: any = [
           charge: -3,
           mMass: 95,
           сonductivityCoefficient: 79.0, //Удельная проводимость ионов PO4-3 79,0 см2/моль
+          atomCount: 1, // В P2O5 содержится 2 атома фосфора
         },
         mMass: 142,
       },
@@ -59,6 +62,7 @@ export const elementBase: any = [
           charge: 1,
           mMass: 39,
           сonductivityCoefficient: 73.4, //Удельная проводимость ионов K+ 73,4 см2/моль
+          atomCount: 2, // В K2O содержится 2 атома калия
         },
         mMass: 94,
       },
@@ -88,6 +92,7 @@ export const elementBase: any = [
           charge: 2,
           mMass: 40,
           сonductivityCoefficient: 61.2, //Удельная проводимость ионов Ca+2 61,2 см2/моль
+          atomCount: 1, // В CaO содержится 1 атом кальция
         },
         mMass: 56,
       },
@@ -113,6 +118,7 @@ export const elementBase: any = [
           charge: 2,
           mMass: 24,
           сonductivityCoefficient: 53.0, //Удельная проводимость ионов Mg+2 53,0 см2/моль
+          atomCount: 1, // В MgO содержится 1 атом магния
         },
         mMass: 40,
       },
@@ -137,6 +143,7 @@ export const elementBase: any = [
           charge: -2,
           mMass: 96,
           сonductivityCoefficient: 79.0, //Удельная проводимость ионов SO4-2 79,0 см2/моль
+          atomCount: 1, // В SO4 содержится 1 атом серы
         },
         mMass: 96,
       },
@@ -155,6 +162,7 @@ export const elementBase: any = [
           charge: 3,
           mMass: 56,
           сonductivityCoefficient: 61.2, //Удельная проводимость ионов Fe+3 61,2 см2/моль
+          atomCount: 2, // В Fe2O3 содержится 2 атома железа
         },
         mMass: 160,
       },
@@ -282,8 +290,13 @@ export const elementBase: any = [
       {
         name: 'Nickel',
         symbol: 'Ni',
-        ione: 'Ni+2',
-        charge: 2,
+        ione: {
+          symbol: 'Ni+2',
+          charge: 2,
+          mMass: 59,
+          сonductivityCoefficient: 50.0,
+          atomCount: 1,
+        },
         mMass: 59,
       },
     ],
@@ -296,8 +309,13 @@ export const elementBase: any = [
       {
         name: 'Cobalt',
         symbol: 'Co',
-        ione: 'Co+2',
-        charge: 2,
+        ione: {
+          symbol: 'Co+2',
+          charge: 2,
+          mMass: 59,
+          сonductivityCoefficient: 53.0,
+          atomCount: 1,
+        },
         mMass: 59,
       },
     ],
@@ -310,8 +328,13 @@ export const elementBase: any = [
       {
         name: 'Sodium',
         symbol: 'Na',
-        ione: 'Na+',
-        charge: 1,
+        ione: {
+          symbol: 'Na+',
+          charge: 1,
+          mMass: 23,
+          сonductivityCoefficient: 50.1,
+          atomCount: 1,
+        },
         mMass: 23,
       },
     ],
@@ -324,8 +347,13 @@ export const elementBase: any = [
       {
         name: 'Silicon',
         symbol: 'Si',
-        ione: 'Si+4',
-        charge: 4,
+        ione: {
+          symbol: 'Si+4',
+          charge: 4,
+          mMass: 28,
+          сonductivityCoefficient: 40.0,
+          atomCount: 1,
+        },
         mMass: 28,
       },
     ],

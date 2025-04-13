@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConcentrateService } from './concentrate.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Concentrate } from '../schemas/concentrate.schema';
+import { Fertilizer } from '../schemas/fertilizer.schema';
 import { Model } from 'mongoose';
 import { CreateConcentrateDto } from './dto/create-concentrate.dto';
 import { UpdateConcentrateDto } from './dto/update-concentrate.dto';
@@ -15,7 +16,6 @@ describe('ConcentrateService', () => {
     name: 'Test Concentrate',
     description: 'Test Description',
   };
-
   const mockConcentrateModel = {
     new: jest.fn().mockResolvedValue(mockConcentrate),
     constructor: jest.fn().mockResolvedValue(mockConcentrate),
@@ -26,9 +26,19 @@ describe('ConcentrateService', () => {
     save: jest.fn().mockResolvedValue(mockConcentrate),
   };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  const mockFertilizerModel = {
+    find: jest.fn().mockResolvedValue([]),
       providers: [
+        ConcentrateService,
+        {
+          provide: getModelToken(Concentrate.name),
+          useValue: mockConcentrateModel,
+        },
+        {
+          provide: getModelToken(Fertilizer.name),
+          useValue: mockFertilizerModel,
+        },
+      ],
         ConcentrateService,
         {
           provide: getModelToken(Concentrate.name),
@@ -49,6 +59,9 @@ describe('ConcentrateService', () => {
     const createConcentrateDto: CreateConcentrateDto = {
       name: 'Test Concentrate',
       description: 'Test Description',
+      fertilizers: [
+        { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
+      ],
     };
     const result = await service.create(createConcentrateDto);
     expect(result).toEqual(mockConcentrate);

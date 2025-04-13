@@ -15,7 +15,7 @@ import { Ion, IonSchema } from './ion.schema';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://ddweed.org/SurinAgro'),
+    MongooseModule.forRoot('mongodb://localhost:27017/SurinAgro'),
     MongooseModule.forFeature([
       { name: Pump.name, schema: PumpSchema },
       { name: Water.name, schema: WaterSchema },

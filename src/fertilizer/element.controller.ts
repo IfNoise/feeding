@@ -13,7 +13,14 @@ import {
 import { ElementService } from './element.service';
 import { UpdateElementDto } from './dto/update-element.dto';
 import { Element } from 'src/schemas/element.schema';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiBody,
+} from '@nestjs/swagger';
+import { Fertilizer } from 'src/schemas/fertilizer.schema';
 
 /**
  * Controller class for managing elements in a fertilizer.
@@ -40,6 +47,18 @@ export class ElementController {
    * @param createElementDto - The data transfer object containing element details.
    * @returns The newly created element.
    */
+  @ApiOperation({ summary: 'Создать новый элемент для удобрения' })
+  @ApiParam({ name: 'fertilizerId', description: 'ID удобрения' })
+  @ApiBody({ type: UpdateElementDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Элемент успешно создан',
+    type: Element,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Удобрение не найдено',
+  })
   @Post()
   @UsePipes(ValidationPipe)
   async create(
@@ -54,6 +73,18 @@ export class ElementController {
    * @param fertilizerId - The ID of the fertilizer.
    * @returns An array of all elements in the fertilizer.
    */
+  @ApiOperation({ summary: 'Получить элемент по ID' })
+  @ApiParam({ name: 'fertilizerId', description: 'ID удобрения' })
+  @ApiParam({ name: 'elementId', description: 'ID элемента' })
+  @ApiResponse({
+    status: 200,
+    description: 'Возвращает элемент',
+    type: Element,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Элемент или удобрение не найдены',
+  })
   @Get(':elementId')
   async findOne(
     @Param('fertilizerId') fertilizerId: string,
@@ -71,13 +102,26 @@ export class ElementController {
    * @throws NotFoundException if the element is not found.
    * @throws BadRequestException if the element is not updated.
    */
+  @ApiOperation({ summary: 'Обновить элемент по ID' })
+  @ApiParam({ name: 'fertilizerId', description: 'ID удобрения' })
+  @ApiParam({ name: 'elementId', description: 'ID элемента' })
+  @ApiBody({ type: UpdateElementDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Элемент успешно обновлен',
+    type: Element,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Элемент или удобрение не найдены',
+  })
   @Patch(':elementId')
   @UsePipes(ValidationPipe)
   async update(
     @Param('fertilizerId') fertilizerId: string,
     @Param('elementId') elementId: string,
     @Body() updateElementDto: UpdateElementDto,
-  ): Promise<Element> {
+  ): Promise<Fertilizer> {
     return this.elementService.update(
       fertilizerId,
       elementId,
@@ -92,11 +136,23 @@ export class ElementController {
    * @returns The deleted element.
    * @throws NotFoundException if the element is not found.
    */
+  @ApiOperation({ summary: 'Удалить элемент по ID' })
+  @ApiParam({ name: 'fertilizerId', description: 'ID удобрения' })
+  @ApiParam({ name: 'elementId', description: 'ID элемента' })
+  @ApiResponse({
+    status: 200,
+    description: 'Элемент успешно удален',
+    type: Element,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Элемент или удобрение не найдены',
+  })
   @Delete(':elementId')
   async remove(
     @Param('fertilizerId') fertilizerId: string,
     @Param('elementId') elementId: string,
-  ): Promise<Element> {
+  ): Promise<Fertilizer> {
     return this.elementService.remove(fertilizerId, elementId);
   }
 }

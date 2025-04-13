@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional, IsEnum, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsNumber, IsOptional, IsEnum } from 'class-validator';
 
 /**
  * The type of fertilizer.
@@ -26,11 +26,25 @@ export class CreateFertilizerDto {
    * @example 'Calcium Nitrate'
    */
   @ApiProperty({
-    description: 'The name of the fertilizer',
-    type: String,
+    description: 'Название удобрения',
+    example: 'Кальциевая селитра',
   })
   @IsString()
   name: string;
+
+  /**
+   * The description of the fertilizer.
+   * @type {string}
+   * @memberof CreateFertilizerDto
+   * @example 'A fertilizer containing calcium nitrate.'
+   */
+  @ApiPropertyOptional({
+    description: 'Описание удобрения',
+    example: '15.5-0-0+19CaO',
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
 
   /**
    * The type of fertilizer.
@@ -39,54 +53,24 @@ export class CreateFertilizerDto {
    * @example 'solid'
    */
   @ApiProperty({
-    description: 'The type of fertilizer',
-    type: String,
+    description: 'Тип удобрения',
     enum: FertilizerType,
+    example: FertilizerType.SOLID,
   })
   @IsEnum(FertilizerType)
   type: FertilizerType;
 
   /**
-   * The description of the fertilizer.
-   * @type {string}
-   * @memberof CreateFertilizerDto
-   * @example 'A fertilizer containing calcium nitrate.'
-   */
-  @ApiProperty({
-    description: 'The description of the fertilizer',
-    type: String,
-  })
-  @IsString()
-  description: string;
-
-  /**
    * The price of the fertilizer.
    * @type {number}
    * @memberof CreateFertilizerDto
    * @example 5.99
    */
-  @ApiProperty({
-    description: 'The price of the fertilizer',
-    type: Number,
-    minimum: 0,
+  @ApiPropertyOptional({
+    description: 'Цена за килограмм',
+    example: 1.5,
   })
-
-  /**
-   * The price of the fertilizer.
-   * @type {number}
-   * @memberof CreateFertilizerDto
-   * @example 5.99
-   */
-  @ApiProperty({
-    description: 'The price of the fertilizer',
-    type: Number,
-    minimum: 0,
-  })
-  @IsNumber({
-    allowInfinity: false,
-    allowNaN: false,
-  })
-  @Min(0)
   @IsOptional()
+  @IsNumber()
   price?: number;
 }
