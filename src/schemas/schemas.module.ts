@@ -12,10 +12,15 @@ import { Recipe, RecipeSchema } from './recipe.schema';
 import { Water, WaterSchema } from './water.schema';
 import { Concentrate, ConcentrateSchema } from './concentrate.schema';
 import { Ion, IonSchema } from './ion.schema';
+import { ConfigService } from '@nestjs/config';
+import { connectDB } from 'src/shared/utils/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/SurinAgro'),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: connectDB,
+    }),
     MongooseModule.forFeature([
       { name: Pump.name, schema: PumpSchema },
       { name: Water.name, schema: WaterSchema },

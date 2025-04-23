@@ -12,10 +12,10 @@ import { LoggerMiddleware } from './common/logger.middlewware';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    // DevtoolsModule.register({
-    //   http: process.env.NODE_ENV !== 'production',
-    // }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
     FertilizerUnitModule,
     ConcentrateModule,
     FertilizerModule,
