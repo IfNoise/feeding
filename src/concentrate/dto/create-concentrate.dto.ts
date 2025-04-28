@@ -1,28 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsString,
-  IsArray,
-  IsOptional,
-  ValidateNested,
-  IsNumber,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-
-class FertilizerConcentration {
-  @ApiProperty({
-    description: 'ID удобрения',
-    example: '60f790f3b311f83d1f4f3f3d',
-  })
-  @IsString()
-  fertilizer: string;
-
-  @ApiProperty({
-    description: 'Концентрация удобрения в процентах',
-    example: 100,
-  })
-  @IsNumber()
-  concentration: number;
-}
+import { IsString, IsOptional } from 'class-validator';
 
 export class CreateConcentrateDto {
   @ApiProperty({
@@ -39,17 +16,4 @@ export class CreateConcentrateDto {
   @IsString()
   @IsOptional()
   description?: string;
-
-  @ApiProperty({
-    description: 'Удобрения в концентрате с их концентрациями',
-    type: [FertilizerConcentration],
-    example: [
-      { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
-      { fertilizer: '60f790f3b311f83d1f4f3f3e', concentration: 50 },
-    ],
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => FertilizerConcentration)
-  fertilizers: FertilizerConcentration[];
 }
