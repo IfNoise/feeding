@@ -39,15 +39,7 @@ export class ConcentrateService {
   async create(
     createConcentrateDto: CreateConcentrateDto,
   ): Promise<Concentrate> {
-    const newConcentrate = new this.concentrateModel(createConcentrateDto);
-    await newConcentrate.save();
-
-    // Автоматический расчет состава при создании, если есть удобрения
-    if (newConcentrate.fertilizers && newConcentrate.fertilizers.length > 0) {
-      await this.calculateConcentrateContent(newConcentrate);
-    }
-
-    return newConcentrate;
+    return this.concentrateModel.create(createConcentrateDto);
   }
 
   /**

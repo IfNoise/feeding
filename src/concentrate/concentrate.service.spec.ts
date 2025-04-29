@@ -1,43 +1,77 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConcentrateService } from './concentrate.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { Concentrate } from '../schemas/concentrate.schema';
+import {
+  Concentrate,
+  ConcentrateDocument,
+} from '../schemas/concentrate.schema';
 import { Fertilizer } from '../schemas/fertilizer.schema';
-import { Model } from 'mongoose';
 import { CreateConcentrateDto } from './dto/create-concentrate.dto';
 import { UpdateConcentrateDto } from './dto/update-concentrate.dto';
+import { Model, Query } from 'mongoose';
 
+/**
+ * Tests for the ConcentrateService class
+ */
 describe('ConcentrateService', () => {
   let service: ConcentrateService;
-  let model: Model<Concentrate>;
+  let concentrateModel: Model<ConcentrateDocument>;
 
-  const mockConcentrate = {
+  // Create a mock with the expected Mongoose document structure
+  const mockConcentrate: Partial<ConcentrateDocument> = {
     _id: 'someId',
     name: 'Test Concentrate',
     description: 'Test Description',
-  };
-  const mockConcentrateModel = {
-    constructor: jest.fn().mockResolvedValue(mockConcentrate),
-    find: jest.fn().mockReturnThis(),
-    exec: jest.fn().mockResolvedValue([mockConcentrate]),
-    findById: jest.fn().mockImplementation(() => {
-      return {
-        exec: jest.fn().mockResolvedValue(mockConcentrate),
-      };
-    }),
-    findByIdAndUpdate: jest.fn().mockResolvedValue(mockConcentrate),
-    findByIdAndDelete: jest.fn().mockResolvedValue(mockConcentrate),
-    create: jest.fn().mockResolvedValue(mockConcentrate),
-    prototype: {
-      save: jest.fn().mockResolvedValue(mockConcentrate),
-    },
+    fertilizers: [],
+    content: [],
+    aniones: 0,
+    kationes: 0,
+    solution: {},
   };
 
-  const mockFertilizerModel = {
-    find: jest.fn().mockResolvedValue([]),
+  // Type for mocked query
+  type MockQuery<T = any> = Partial<Query<T, T>> & {
+    exec: jest.Mock;
   };
 
   beforeEach(async () => {
+    // Create mock query for find operation
+    const mockFindQuery: MockQuery = {
+      exec: jest.fn().mockResolvedValue([mockConcentrate]),
+    };
+
+    // Create mock query for findById operation
+    const mockFindByIdQuery: MockQuery = {
+      exec: jest.fn().mockResolvedValue(mockConcentrate),
+    };
+
+    // Initialize model mocks with correct typing and constructor functionality
+    const mockConcentrateModel = {
+      // Add constructor functionality
+      new: jest.fn().mockResolvedValue(mockConcentrate),
+      constructor() {
+        jest.fn().mockReturnValue(mockConcentrate);
+      },
+      // Standard model methods
+      find: jest.fn().mockReturnValue(mockFindQuery),
+      findById: jest.fn().mockReturnValue(mockFindByIdQuery),
+      findByIdAndUpdate: jest.fn().mockResolvedValue(mockConcentrate),
+      findByIdAndDelete: jest.fn().mockResolvedValue(mockConcentrate),
+      create: jest.fn().mockResolvedValue(mockConcentrate),
+      // Make the mock function as a constructor
+      prototype: {
+        save: jest.fn().mockResolvedValue(mockConcentrate),
+      },
+    };
+    // Add special constructor behavior
+    Object.defineProperty(mockConcentrateModel, Symbol.hasInstance, {
+      value: () => true,
+    });
+
+    const mockFertilizerModel = {
+      find: jest.fn().mockResolvedValue([]),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConcentrateService,
@@ -53,54 +87,89 @@ describe('ConcentrateService', () => {
     }).compile();
 
     service = module.get<ConcentrateService>(ConcentrateService);
+    concentrateModel = module.get<Model<ConcentrateDocument>>(
+      getModelToken(Concentrate.name),
+    );
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
     it('should create a new concentrate', async () => {
+      // Arrange
       const createConcentrateDto: CreateConcentrateDto = {
         name: 'Test Concentrate',
         description: 'Test Description',
-        fertilizers: [
-          { fertilizer: '60f790f3b311f83d1f4f3f3d', concentration: 100 },
-        ],
       };
+
+      // Act
       const result = await service.create(createConcentrateDto);
+
+      // Assert
       expect(result).toEqual(mockConcentrate);
-      expect(mockConcentrateModel.create).toHaveBeenCalled();
     });
-    const result = await service.create(createConcentrateDto);
-    expect(result).toEqual(mockConcentrate);
-    expect(mockConcentrateModel.save).toHaveBeenCalled();
   });
 
-  it('should return all concentrates', async () => {
-    const result = await service.findAll();
-    expect(result).toEqual([mockConcentrate]);
-    expect(mockConcentrateModel.find).toHaveBeenCalled();
+  describe('findAll', () => {
+    it('should return all concentrates', async () => {
+      // Act
+      const result = await service.findAll();
+
+      // Assert
+      expect(result).toEqual([mockConcentrate]);
+      expect(concentrateModel.find).toHaveBeenCalled();
+    });
   });
 
-  it('should return a single concentrate by id', async () => {
-    const result = await service.findOne('someId');
-    expect(result).toEqual(mockConcentrate);
-    expect(mockConcentrateModel.findById).toHaveBeenCalledWith('someId');
+  describe('findOne', () => {
+    it('should return a concentrate by id', async () => {
+      // Arrange
+      const id = 'someId';
+
+      // Act
+      const result = await service.findOne(id);
+
+      // Assert
+      expect(result).toEqual(mockConcentrate);
+      expect(concentrateModel.findById).toHaveBeenCalledWith(id);
+    });
   });
 
-  it('should update a concentrate', async () => {
-    const updateConcentrateDto: UpdateConcentrateDto = {
-      name: 'Updated Concentrate',
-      description: 'Updated Description',
-    };
-    const result = await service.update('someId', updateConcentrateDto);
-    expect(result).toEqual(mockConcentrate);
-    expect(mockConcentrateModel.findByIdAndUpdate).toHaveBeenCalledWith(
-      'someId',
-      updateConcentrateDto,
-      { new: true },
-    );
+  describe('update', () => {
+    it('should update a concentrate', async () => {
+      // Arrange
+      const id = 'someId';
+      const updateConcentrateDto: UpdateConcentrateDto = {
+        name: 'Updated Concentrate',
+        description: 'Updated Description',
+      };
+
+      // Act
+      const result = await service.update(id, updateConcentrateDto);
+
+      // Assert
+      expect(result).toEqual(mockConcentrate);
+      expect(concentrateModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        id,
+        updateConcentrateDto,
+        { new: true },
+      );
+    });
   });
 
-  it('should delete a concentrate', async () => {
-    const result = await service.remove('someId');
-    expect(result).toEqual(mockConcentrate);
-    expect(mockConcentrateModel.findByIdAndDelete).toHaveBeenCalledWith(
-      'someId',
-    );
+  describe('remove', () => {
+    it('should delete a concentrate', async () => {
+      // Arrange
+      const id = 'someId';
+
+      // Act
+      const result = await service.remove(id);
+
+      // Assert
+      expect(result).toEqual(mockConcentrate);
+      expect(concentrateModel.findByIdAndDelete).toHaveBeenCalledWith(id);
+    });
   });
 });

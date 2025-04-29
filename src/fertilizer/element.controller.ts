@@ -9,6 +9,7 @@ import {
   Logger,
   UsePipes,
   ValidationPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ElementService } from './element.service';
 import { UpdateElementDto } from './dto/update-element.dto';
@@ -21,12 +22,14 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { Fertilizer } from 'src/schemas/fertilizer.schema';
+import { CalculationInterceptor } from 'src/shared/interceptors/calculation.interceptor';
 
 /**
  * Controller class for managing elements in a fertilizer.
  */
 @ApiTags('Fertilizer/Elements')
 @Controller('fertilizers/:fertilizerId/elements')
+@UseInterceptors(CalculationInterceptor)
 export class ElementController {
   /**
    * Logger instance.

@@ -6,17 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FertilizerService } from './fertilizer.service';
 import { AddFertilizerDto } from './dto/add-fertilizer.dto';
 import { UpdateFertilizerDto } from './dto/update-fertilizer.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CalculationInterceptor } from 'src/shared/interceptors/calculation.interceptor';
 
 /**
  * Controller class for managing fertilizers.
  */
 @ApiTags('Concentrate/Fertilizers')
 @Controller({ path: 'concentrates/:concentrateId/fertilizers', version: '1' })
+@UseInterceptors(CalculationInterceptor)
 export class FertilizerController {
   /**
    * Constructor for the FertilizerController class.

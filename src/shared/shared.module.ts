@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { CalculationService } from './services/calculation.service';
-import { ConcentrateSchema } from '../schemas/concentrate.schema';
+import { SchemasModule } from 'src/schemas/schemas.module';
+import { CalculationHelperService } from './services/calculation-helper.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: 'Concentrate', schema: ConcentrateSchema },
-    ]),
-  ],
-  providers: [CalculationService],
-  exports: [CalculationService],
+  imports: [SchemasModule],
+  providers: [CalculationHelperService],
+  exports: [CalculationHelperService],
 })
 export class SharedModule {}
